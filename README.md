@@ -56,10 +56,6 @@ Messages added to the job queue remain until explicitly removed.
                 }
             );
 
-            queue.addHandler('jobtype1', handleJob, function(err) {
-                // added job handler
-            });
-
             queue.runJobs({countLimit: 100, timeLimitMs: 200}, function(err, count) {
                 // processed count jobs
             });
