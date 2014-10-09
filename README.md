@@ -17,6 +17,10 @@ Messages are matched to message handlers by the jobtype string (channel).
 Messages added to the job queue remain until explicitly removed.
 (See the [beanstalk job lifecycle description](https://github.com/kr/beanstalkd/blob/master/doc/protocol.md#job-lifecycle).)
 
+### Install
+
+        npm install git://github.com/Kinvey/kqueue
+
 ### Features
 
 - real-time (scheduling/routing/execution overhead under .5 ms)

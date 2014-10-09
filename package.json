@@ -5,7 +5,7 @@
   "license": "",
   "repository": {
     "type": "git",
-    "url": "git://github.com/kinvey/kqueue"
+    "url": "https://github.com/Kinvey/kqueue"
   },
   "main": "index.js",
   "author": {

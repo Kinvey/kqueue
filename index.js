@@ -15,7 +15,7 @@ module.exports = function buildQueue( config ) {
     var host = config.host || '0.0.0.0';
     var port = config.port || 11300;
 
-    var client = (new BeanstalkClient(host, port)).open(host, port);
+    var client = (new BeanstalkClient(host, port)).open();
     var queue = new KQueue({
         beanstalkClient: client,
         jobStore: new JobStore(),
