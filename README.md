@@ -37,21 +37,31 @@ Messages added to the job queue remain until explicitly removed.
         queue.open(function(err) {
             for (var i=1; i<=10; i++) {
                 queue.addJob('jobtype1', 'myPayload' + i, function(err, jobid) {
-                    if (err) throw err;
+                    // added job
                 });
             }
 
-            queue.addHandler('jobtype1', function(job, cb) {
-                var myPayload = job.payload;
-                queue.deleteJob(job, function(err) {
-                    // could also just ignore delete errors, job would run again
-                    cb(err);
-                });
+            queue.addHandler(
+                'jobtype1',
+                function handleJob( job, cb ) {
+                    // process myPayload = job.payload
+                    // ...
+                    queue.deleteJob(job, function(err) {
+                        // job finished and removed
+                        cb(err);
+                    });
+                },
+                function(err) {
+                    // registered job handler
+                }
+            );
+
+            queue.addHandler('jobtype1', handleJob, function(err) {
+                // added job handler
             });
 
             queue.runJobs({countLimit: 100, timeLimitMs: 200}, function(err, count) {
-                if (err) throw err;
-                // actually ran count jobs
+                // processed count jobs
             });
             queue.close();
         });

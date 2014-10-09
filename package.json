@@ -1,0 +1,34 @@
+{
+  "name": "kqueue",
+  "version": "0.1.0",
+  "description": "job queue and job runner",
+  "license": "",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kinvey/kqueue"
+  },
+  "main": "index.js",
+  "author": {
+    "name": "Andras",
+    "url": "http://github.com/andrasq"
+  },
+  "engines": {
+    "node": ">=0.0.0"
+  },
+  "scripts": {
+    "test": "nodeunit"
+  },
+  "keywords": [
+    "queue",
+    "beanstalk",
+    "job",
+    "runner",
+    "scheduler"
+  ],
+  "dependencies": {
+    "fivebeans": "*"
+  },
+  "devDependencies": {
+    "nodeunit": "*"
+  }
+}
