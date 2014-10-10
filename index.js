@@ -19,8 +19,8 @@ module.exports = function buildQueue( config ) {
     var queue = new KQueue({
         beanstalkClient: client,
         jobStore: new JobStore(),
-        // retryDelaySec: 30,
-        // log: 
+        retryDelaySec: config.retryDelaySec || 30,
+        log: config.log || undefined
     });
     return queue;
 };
