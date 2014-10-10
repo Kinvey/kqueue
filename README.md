@@ -37,7 +37,10 @@ Messages added to the job queue remain until explicitly removed.
 ### Example
 
         var KQueue = require('kqueue');
-        var queue = new KQueue({host: '0.0.0.0', port: 11300});
+        var queue = new KQueue({
+            host: 'localhost',
+            port: 11300
+        });
         queue.open(function(err) {
             for (var i=1; i<=10; i++) {
                 queue.addJob('jobtype1', 'myPayload' + i, function(err, jobid) {
@@ -135,4 +138,4 @@ Lessons
 - nodejs modules have weird avoidable quirks (async recursion depth, fivebeans order of operations)
 - some information not visible until late into the project, eg beanstalkd job delete rate, max payload size
 - sometimes a hackathon has a mini-hackathon lurking inside: qbean! (batching beanstalkd driver)
-- clustered mode triples throughput (4-core system; wasn't sure what to expect)
+- clustered mode triples throughput (4-core system)
