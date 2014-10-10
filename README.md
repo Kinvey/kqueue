@@ -120,7 +120,9 @@ Options:
 - minor refactoring to smooth out the interfaces
 - clean up, remove remnants of scaffolding
 - fully decouple from [fivebeans](https://github.com/ceejbot/fivebeans) beanstalkd bindings
-- address race condition: only confirm addJob() when synced by beanstalkd (configured 50ms sync interval)
+- address race condition: only confirm addJob() when synced by beanstalkd (configured 50ms sync interval).
+Maybe spool the jobs to a job journal, ack the caller, and clear out the journal when the daemon
+is guaranteed to have synced all jobs to its binlog.  Actually, two journals, and flip between them.
 - try bonded mode, single interface to multiple connections
 - try bonded mode: single interface to multiple beanstalkd servers
 - investigate job delete speed issue (try batched with netcat, try with -f 10000 sync)

@@ -4,7 +4,7 @@
  * Copyright (c) 2014, Kinvey, Inc. All rights reserved.
  */
 
-var BeanstalkClient = require('./lib/BeanstalkClientFivebeans');
+var BeanstalkClient = require('./lib/BeanstalkClientQBean');
 var JobStore = require('./lib/JobStoreMock');
 var KQueue = require('./lib/kqueue');
 
