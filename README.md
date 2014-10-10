@@ -62,8 +62,9 @@ Messages added to the job queue remain until explicitly removed.
 
             queue.runJobs({countLimit: 100, timeLimitMs: 200}, function(err, count) {
                 // processed count jobs
+                // once inserts have finished, finish up
+                queue.close();
             });
-            queue.close();
         });
 
 
@@ -126,9 +127,7 @@ is guaranteed to have synced all jobs to its binlog.  Actually, two journals, an
 - try bonded mode, single interface to multiple connections
 - try bonded mode: single interface to multiple beanstalkd servers
 - investigate job delete speed issue (try batched with netcat, try with -f 10000 sync)
-- integrate qbean (batched, time batched throughput
 - support multiple job handlers (listeners) for pub/sub like message multicast
-- iron out clustered mode q.close kink
 
 Lessons
 ----
