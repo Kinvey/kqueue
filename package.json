@@ -1,6 +1,6 @@
 {
   "name": "kqueue",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "job queue and job runner",
   "license": "",
   "repository": {
@@ -26,6 +26,9 @@
     "scheduler"
   ],
   "dependencies": {
+    "arlib": "0.0.23",
+    "aflow": "~0.2.0",
+    "qbean": "~0.0.1"
   },
   "devDependencies": {
     "nodeunit": "*"
