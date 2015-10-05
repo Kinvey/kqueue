@@ -1,7 +1,6 @@
 'use strict'
 
-var buildQueue = require('../index')
-var KQueue = require('../lib/kqueue')
+var kqueue = require('../index')
 
 module.exports = {
     'package should parse': function(t) {
@@ -9,10 +8,22 @@ module.exports = {
         t.done()
     },
 
+    'should export KQueue': function(t) {
+        t.equal(kqueue.KQueue, require('../lib/kqueue.js'))
+        t.done()
+    },
+
+    'should export buildQueue': function(t) {
+        t.equal(typeof kqueue.buildQueue, 'function')
+        t.done()
+    },
+
     'buildQueue should return a KQueue': function(t) {
-        buildQueue({}, function(err, q) {
-            t.ok(q instanceof KQueue)
+        kqueue.buildQueue({}, function(err, q) {
+            t.ok(q instanceof kqueue.KQueue)
             t.done()
         })
     },
 }
+
+// TODO: figure out why unit tests have a .15 sec overhead

@@ -17,61 +17,9 @@
 
 'use strict';
 
-var BeanstalkClient = require('./lib/BeanstalkClientQBean.js');
-var JobStoreMemory = require('./lib/JobStoreMock.js');
-var JobStoreMongodb = require('./lib/JobStoreMongodb.js');
 var KQueue = require('./lib/kqueue.js');
-
-var mongo = require('mongodb');         // TODO: use mongolian
-
-module.exports.createServer = function createServer( config, cb ) {
-    if (!cb && typeof config === 'function') { cb = config; config = {} }
-    var config = require('qconfig');
-
-    // ...
-};
-
-module.exports.buildQueue = function buildQueue( config, callback ) {
-    if (!callback) throw new Error("callback required");
-    config = config || {};
-    var host = config.host || '127.0.0.1';
-    var port = config.port || 11300;
-
-    createStore(config, function(err, store) {
-        if (err) return callback(err);
-        config.bulkStore = store;
-        createQueue(config, function(err, queue) {
-            if (err) return callback(err);
-            callback(null, queue);
-        });
-    });
-    return;
-
-    function createStore( config, cb ) {
-        if (config.mongodbUrl) {
-            var mongoConfig = {db: {safe: true, w: 1}, server: {poolSize: 1}};
-            mongo.connect(config.mongodbUrl, mongoConfig, function(err, db) {
-                return cb(err, new JobStoreMongodb({db: db}));
-            });
-        }
-        else {
-            return cb(null, new JobStoreMemory());
-        }
-    }
-
-    function createQueue( config, cb ) {
-        var bean = new BeanstalkClient(host, port);
-        var client = bean.open();
-        var queue = new KQueue({
-            beanstalkClient: client,
-            retryDelaySec: config.retryDelaySec || 30,
-            jobStore: config.bulkStore || new JobStoreMemory(),
-            log: config.log || undefined
-        });
-        bean.start(function() {
-            return cb(null, queue);
-        });
-    }
-};
+var service = require('./lib/service.js');
 
 module.exports.KQueue = KQueue;
+module.exports.buildQueue = service.buildQueue;
+module.exports.createServer = service.createServer;
