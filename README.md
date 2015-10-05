@@ -77,8 +77,9 @@ Messages added to the job queue remain until explicitly removed.
 ### KQueue( options )
 Options:
 
-        host: '0.0.0.0' // beanstalkd daemon server
-        port: 11300     // beanstalkd daemon port
+        host: '0.0.0.0'   // beanstalkd daemon server
+        port: 11300       // beanstalkd daemon port
+        bulkStore: null   // bulk key-value store for job data with get/set/delete methods
 
 ### open( callback )
 
@@ -131,6 +132,8 @@ is guaranteed to have synced all jobs to its binlog.  Actually, two journals, an
 - try bonded mode: single interface to multiple beanstalkd servers
 - investigate job delete speed issue (try batched with netcat, try with -f 10000 sync)
 - support multiple job handlers (listeners) for pub/sub like message multicast
+
+- fix queueing (use+add) race condition: needs to be atomic
 
 Lessons
 ----

@@ -15,23 +15,43 @@
  * contents is a violation of applicable laws.
  */
 
+'use strict';
+
 var BeanstalkClient = require('./lib/BeanstalkClientQBean');
-var JobStore = require('./lib/JobStoreMock');
+var JobStoreMemory = require('./lib/JobStoreMock');
+var JobStoreMongodb = require('./lib/JobStoreMock');
 var KQueue = require('./lib/kqueue');
 
-module.exports = function buildQueue( config ) {
-    'use strict';
+var mongo = require('mongodb');         // TODO: use mongolian
 
+module.exports = function buildQueue( config, callback ) {
+    if (!callback) throw new Error("callback required");
     config = config || {};
     var host = config.host || '0.0.0.0';
     var port = config.port || 11300;
 
-    var client = (new BeanstalkClient(host, port)).open();
-    var queue = new KQueue({
-        beanstalkClient: client,
-        jobStore: new JobStore(),
-        retryDelaySec: config.retryDelaySec || 30,
-        log: config.log || undefined
-    });
-    return queue;
+    if (config.mongodbUrl) {
+        mongo.connect(config.mongodbUrl, {db: {safe: true, w: 1}, server: {poolSize: 1}}, function(err, db) {
+            if (err) throw err;
+            config.bulkStore = new JobStoreMongodb({db: db})
+            return createQueue(config, ballback);
+        });
+    }
+    else {
+        return createQueue(config, callback);
+    }
+
+    function createQueue( config, cb ) {
+        var bean = new BeanstalkClient(host, port);
+        var client = bean.open();
+        var queue = new KQueue({
+            beanstalkClient: client,
+            retryDelaySec: config.retryDelaySec || 30,
+            jobStore: config.bulkStore || new JobStoreMemory(),
+            log: config.log || undefined
+        });
+        bean.start(function() {
+            return cb(null, queue);
+        });
+    }
 };
