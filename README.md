@@ -36,7 +36,7 @@ Messages added to the job queue remain until explicitly removed.
 
 ### Example
 
-        var KQueue = require('kqueue');
+        var KQueue = require('kqueue').KQueue;
         var queue = new KQueue({
             host: 'localhost',
             port: 11300
@@ -110,8 +110,8 @@ Options:
 ### runJobs( options, function(err, countRan) )
 Options:
 
-        timeLimitMs
-        countLimit
+        timeLimitMs     0: do not wait, >0: wait ms, -1: unlimited
+        countLimit      >0: at most count, <0: unlimited
 
 ----
 ## Todo

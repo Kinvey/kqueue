@@ -86,7 +86,7 @@ buildQueue(config, function(err, queue) {
                 });
             },
             function(err) {
-                // registered job handler
+                if (err) throw new Error("unable to register handler for jobtype", err);
             }
         );
         queue.runJobs({countLimit: doRuns, timeLimitMs: -1}, function(err, count) {

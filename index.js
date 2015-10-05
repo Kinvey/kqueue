@@ -24,10 +24,19 @@ var KQueue = require('./lib/kqueue');
 
 var mongo = require('mongodb');         // TODO: use mongolian
 
+// TODO: should export methods createServer(), class KQueue, and read config/default.conf
+
+module.exports.createServer = function createServer( config, cb ) {
+    if (!cb && typeof config === 'function') { cb = config; config = {} }
+    var config = require('qconfig');
+
+    // ...
+};
+
 module.exports = function buildQueue( config, callback ) {
     if (!callback) throw new Error("callback required");
     config = config || {};
-    var host = config.host || '0.0.0.0';
+    var host = config.host || '127.0.0.1';
     var port = config.port || 11300;
 
     if (config.mongodbUrl) {
@@ -55,3 +64,5 @@ module.exports = function buildQueue( config, callback ) {
         });
     }
 };
+
+module.exports.KQueue = KQueue;
