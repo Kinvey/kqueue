@@ -17,14 +17,12 @@
 
 'use strict';
 
-var BeanstalkClient = require('./lib/BeanstalkClientQBean');
-var JobStoreMemory = require('./lib/JobStoreMock');
-var JobStoreMongodb = require('./lib/JobStoreMock');
-var KQueue = require('./lib/kqueue');
+var BeanstalkClient = require('./lib/BeanstalkClientQBean.js');
+var JobStoreMemory = require('./lib/JobStoreMock.js');
+var JobStoreMongodb = require('./lib/JobStoreMongodb.js');
+var KQueue = require('./lib/kqueue.js');
 
 var mongo = require('mongodb');         // TODO: use mongolian
-
-// TODO: should export methods createServer(), class KQueue, and read config/default.conf
 
 module.exports.createServer = function createServer( config, cb ) {
     if (!cb && typeof config === 'function') { cb = config; config = {} }
@@ -33,21 +31,32 @@ module.exports.createServer = function createServer( config, cb ) {
     // ...
 };
 
-module.exports = function buildQueue( config, callback ) {
+module.exports.buildQueue = function buildQueue( config, callback ) {
     if (!callback) throw new Error("callback required");
     config = config || {};
     var host = config.host || '127.0.0.1';
     var port = config.port || 11300;
 
-    if (config.mongodbUrl) {
-        mongo.connect(config.mongodbUrl, {db: {safe: true, w: 1}, server: {poolSize: 1}}, function(err, db) {
-            if (err) throw err;
-            config.bulkStore = new JobStoreMongodb({db: db})
-            return createQueue(config, ballback);
+    createStore(config, function(err, store) {
+        if (err) return callback(err);
+        config.bulkStore = store;
+        createQueue(config, function(err, queue) {
+            if (err) return callback(err);
+            callback(null, queue);
         });
-    }
-    else {
-        return createQueue(config, callback);
+    });
+    return;
+
+    function createStore( config, cb ) {
+        if (config.mongodbUrl) {
+            var mongoConfig = {db: {safe: true, w: 1}, server: {poolSize: 1}};
+            mongo.connect(config.mongodbUrl, mongoConfig, function(err, db) {
+                return cb(err, new JobStoreMongodb({db: db}));
+            });
+        }
+        else {
+            return cb(null, new JobStoreMemory());
+        }
     }
 
     function createQueue( config, cb ) {

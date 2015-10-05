@@ -49,12 +49,13 @@ function done( queue ) {
 }
 
 // run the queue
-var buildQueue = require('../index');
+var kqueue = require('../index');
 var config = {
     host: beanstalkHost,
     port: beanstalkPort,
 }
-buildQueue(config, function(err, queue) {
+kqueue.buildQueue(config, function(err, queue) {
+    if (err) throw err;
     var nadded = 0;
     if (doInserts) {
         var insertsStartTm = Date.now();
