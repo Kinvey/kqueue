@@ -94,7 +94,16 @@ Options:
         delay: 0        // seconds before eligible to run
         ttr: 30         // once reserved, must finish in 30 seconds else will be re-queued
 
-### addHandler( jobtype, handlerFunc(jobObject, callback), callback )
+### addHandler( jobtype, handlerFunc(jobObject, cb), callback )
+
+Register the handler function to process jobs of type jobtype.  The
+queue starts listening for and running jobs of jobtype.  The callback is
+called once the listener has been installed.
+
+The handler is a function taking two arguments, the job object and a
+callback.  The callback must be called when the handler is done, else
+the computation will block.
+
         var myPayload = jobObject.payload
 
 ### removeHandler( jobtype, callback )
