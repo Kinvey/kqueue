@@ -26,13 +26,20 @@ module.exports = {
     },
 
     'addJob': {
+        'should prefix jobtype with "kq-"': function(t) {
+            var self = this
+            this.queue.addJob(this.jobtype, this.payload, function(err, jobid) {
+                t.equal(self.bean.calls[0][0].indexOf('kq-'), 0)
+                t.done()
+            })
+        },
+
         'should use() then put() into beanstalk': function(t) {
             var self = this
-            this.queue.addJob(this.jobtype, this.payload, function addJobCallback(err, jobid) {
-                t.equal(self.bean.calls[0][0], self.jobtype)
+            this.queue.addJob(this.jobtype, this.payload, function(err, jobid) {
+                t.equal(self.bean.calls[0][0], 'kq-' + self.jobtype)
                 t.equal(self.bean.calls[0].name, 'use')
                 t.equal(self.bean.calls[1].name, 'put')
-                // calls[0][1] is a wrappered addJobCallback
                 t.done()
             })
         },
@@ -47,6 +54,7 @@ module.exports = {
                 var inserted = JSON.parse(self.bean.calls[1][3])
                 t.equal(inserted.payload, self.payload)
                 // calls[1][4] is a wrappered addJobCallback
+                t.equal(typeof self.bean.calls[1][4], 'function')
                 t.done()
             })
         },
