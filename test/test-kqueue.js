@@ -86,4 +86,11 @@ module.exports = {
             })
         },
     },
+
+    'runJobs': {
+        'should receive large payload from store': function(t) {
+// WRITEME
+            t.done()
+        },
+    },
 }
