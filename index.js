@@ -15,23 +15,11 @@
  * contents is a violation of applicable laws.
  */
 
-var BeanstalkClient = require('./lib/BeanstalkClientQBean');
-var JobStore = require('./lib/JobStoreMock');
-var KQueue = require('./lib/kqueue');
+'use strict';
 
-module.exports = function buildQueue( config ) {
-    'use strict';
+var KQueue = require('./lib/kqueue.js');
+var service = require('./lib/service.js');
 
-    config = config || {};
-    var host = config.host || '0.0.0.0';
-    var port = config.port || 11300;
-
-    var client = (new BeanstalkClient(host, port)).open();
-    var queue = new KQueue({
-        beanstalkClient: client,
-        jobStore: new JobStore(),
-        retryDelaySec: config.retryDelaySec || 30,
-        log: config.log || undefined
-    });
-    return queue;
-};
+module.exports.KQueue = KQueue;
+module.exports.buildQueue = service.buildQueue;
+module.exports.createServer = service.createServer;

@@ -18,10 +18,11 @@
 var beanstalkHost = 'localhost';
 var beanstalkPort = 11300;
 
-var doInserts = 5000;           // how many jobs to insert into the queue
-var doRuns = 2500;              // how many jobs to run from the queue
+var doInserts = doRuns = 0;
+var doInserts = 10000;          // how many jobs to insert into the queue
+var doRuns = 10000;              // how many jobs to run from the queue
 var jobtype = 'testjob1';       // tube to put jobs into
-var workerCount = 2;            // number of cluster workers
+var workerCount = 4;            // number of job runners
 
 // initialize worker cluster
 var _cluster;
@@ -38,7 +39,7 @@ if (workerCount > 1) {
 
 // gather all potential exits to only close the queue when everyones done
 var _doneCount = 0;
-function done() {
+function done( queue ) {
     _doneCount += 1;
     var expectedDoneCount = !!doInserts + !!doRuns;
     if (_doneCount >= expectedDoneCount) {
@@ -48,13 +49,13 @@ function done() {
 }
 
 // run the queue
-var KQueue = require('../index');
-var queue = new KQueue({
+var kqueue = require('../index');
+var config = {
     host: beanstalkHost,
-    port: beanstalkPort
-});
-
-queue.open(function(err) {
+    port: beanstalkPort,
+}
+kqueue.buildQueue(config, function(err, queue) {
+    if (err) throw err;
     var nadded = 0;
     if (doInserts) {
         var insertsStartTm = Date.now();
@@ -66,13 +67,13 @@ queue.open(function(err) {
                 ++nadded;
                 if (nadded >= doInserts) {
                     console.log("inserted ", doInserts, "in", Date.now()-insertsStartTm, "ms");
-                    done();
+                    done(queue);
                 }
             });
         }
     }
 
-    if (doRuns) {
+    if (doRuns) setTimeout(function() {
         var runsStartTm = Date.now();
         console.log("Runs started at ", runsStartTm);
         queue.addHandler(
@@ -86,15 +87,15 @@ queue.open(function(err) {
                 });
             },
             function(err) {
-                // registered job handler
+                if (err) throw new Error("unable to register handler for jobtype", err);
             }
         );
         queue.runJobs({countLimit: doRuns, timeLimitMs: -1}, function(err, count) {
             // processed count jobs
             console.log("processed", count, "jobs in", Date.now()-runsStartTm, "ms");
-            done();
+            done(queue);
         });
-    }
-});
+    }, 1);
 
-if (!doInserts && !doRuns) done();
+    if (!doInserts && !doRuns) done(queue);
+});

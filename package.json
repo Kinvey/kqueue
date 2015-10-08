@@ -1,6 +1,6 @@
 {
   "name": "kqueue",
-  "version": "0.2.4",
+  "version": "1.0.0",
   "description": "job queue and job runner",
   "license": "",
   "repository": {
@@ -16,7 +16,7 @@
     "node": ">=0.0.0"
   },
   "scripts": {
-    "test": "nodeunit"
+    "test": "qunit test"
   },
   "keywords": [
     "queue",
@@ -26,11 +26,14 @@
     "scheduler"
   ],
   "dependencies": {
-    "arlib": "0.0.23",
-    "aflow": "~0.2.0",
-    "qbean": "~0.0.1"
+    "mongoid-js": "1.0.6",
+    "qbuffer": "1.2.0",
+    "qrpc": "1.0.1",
+    "qbean": "1.0.0",
+    "qfputs": "1.2.2",
+    "aflow": "0.9.2"
   },
   "devDependencies": {
-    "nodeunit": "*"
+    "node-qunit": "*"
   }
 }
