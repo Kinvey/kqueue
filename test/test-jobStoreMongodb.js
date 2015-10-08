@@ -3,14 +3,14 @@
 var mongodb = require('mongodb')
 var JobStoreMongodb = require('../lib/JobStoreMongodb.js')
 
-var mongoUrl = "mongodb://localhost/kqueue"
+var mongodbUrl = "mongodb://localhost/kqueue"
 
 module.exports = {
     setUp: function(done) {
         var self = this
-        mongodb.connect(mongoUrl, function(err, db) {
+        mongodb.connect(mongodbUrl, function(err, db) {
             self.db = db;
-            self.coll = db.db("testKqueue").collection("unittest")
+            self.coll = db.db("unittest").collection("kqueue_store")
             self.cut = new JobStoreMongodb({ collection: self.coll })
             done();
         })
