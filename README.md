@@ -51,7 +51,7 @@ Messages added to the job queue remain until explicitly removed.
             queue.addHandler(
                 'jobtype1',
                 function handleJob( job, cb ) {
-                    // process myPayload = job.payload
+                    // process myPayload = job.data
                     // ...
                     queue.deleteJob(job, function(err) {
                         // job finished and removed
@@ -100,11 +100,11 @@ Register the handler function to process jobs of type jobtype.  The
 queue starts listening for and running jobs of jobtype.  The callback is
 called once the listener has been installed.
 
-The handler is a function taking two arguments, the job object and a
-callback.  The callback must be called when the handler is done, else
-the computation will block.
+The handler is a function taking two arguments, the job object and a callback.
+The job arguments are in `job.data`.  The callback must be called when the
+handler is done, else the computation will block.
 
-        var myPayload = jobObject.payload
+        var myPayload = jobObject.data
 
 ### removeHandler( jobtype, callback )
 
@@ -126,23 +126,14 @@ Options:
 ## Todo
 
 - unit tests
-- attach a durable jobStore for large payloads
 - log more info (there is logging support built in)
-- hooks for monitoring and alerting
 - analyze and address points of failure (and SPOF)
 - add calls for introspection, queue stats, job stats
 - minor refactoring to smooth out the interfaces
 - clean up, remove remnants of scaffolding
-- fully decouple from [fivebeans](https://github.com/ceejbot/fivebeans) beanstalkd bindings
-- address race condition: only confirm addJob() when synced by beanstalkd (configured 50ms sync interval).
-Maybe spool the jobs to a job journal, ack the caller, and clear out the journal when the daemon
-is guaranteed to have synced all jobs to its binlog.  Actually, two journals, and flip between them.
 - try bonded mode, single interface to multiple connections
 - try bonded mode: single interface to multiple beanstalkd servers
-- investigate job delete speed issue (try batched with netcat, try with -f 10000 sync)
-- support multiple job handlers (listeners) for pub/sub like message multicast
-
-- fix queueing (use+add) race condition: needs to be atomic
+- maybe allow multiple job handlers (listeners) for pub/sub like message multicast
 
 Lessons
 ----

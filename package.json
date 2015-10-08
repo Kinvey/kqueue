@@ -1,6 +1,6 @@
 {
   "name": "kqueue",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "job queue and job runner",
   "license": "",
   "repository": {
