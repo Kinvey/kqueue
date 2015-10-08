@@ -49,5 +49,8 @@ testing call, returns the call arguments it receives
 Todo
 ----
 
-* configurable jobtype handling
-* "fair" scheduler
+* configure jobtype handling in config file (for job classes, server pools)
+* "fair share" scheduler
+* call logs (latency, duration)
+* healthcheck call
+* unit test: binary payloads
