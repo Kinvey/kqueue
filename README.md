@@ -122,6 +122,14 @@ Options:
         timeLimitMs     0: do not wait, >0: wait ms, -1: unlimited
         countLimit      >0: at most count, <0: unlimited
 
+### purgeJobs( jobtype, [matchingRegExp,] cb )
+
+Delete all queued jobs of type jobtype whose serialized form matches the given
+regular expression (by default all jobs match).  Returns the count of jobs
+deleted.  This is an administrative command for advanced users only.  Do not
+call this command on servers that are listening for jobs.
+
+
 ----
 ## Todo
 
