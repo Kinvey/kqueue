@@ -52,7 +52,7 @@ module.exports = {
                 t.equal(self.bean.calls[1][1], 234)
                 t.equal(self.bean.calls[1][2], 345)
                 var inserted = JSON.parse(self.bean.calls[1][3])
-                t.equal(inserted.payload, self.payload)
+                t.equal(inserted.data, self.payload)
                 // calls[1][4] is a wrappered addJobCallback
                 t.equal(typeof self.bean.calls[1][4], 'function')
                 t.done()
@@ -65,7 +65,7 @@ module.exports = {
                 var keys = self.jobStore.keys()
                 self.jobStore.get(keys[0], function(err, data) {
                     var job = JSON.parse(data);
-                    t.equal(job.payload, payload)
+                    t.equal(job.data, payload)
                     t.done()
                 })
             })
