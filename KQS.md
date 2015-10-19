@@ -48,9 +48,9 @@ may optionally contain the fields
 
         { type: jobtype,                // job type, string, required
           data: payload,                // job payload, any js value, default undefined
-          prio: 'normal',               // priority, urgent|high|normal|low|bulk default normal
+          prio: 'normal',               // priority urgent|high|normal|low|bulk, default normal
           delay: 0,                     // run after delay seconds, default 0
-          ttr: 30 }                     // job runtime limit, re-run if exceeded, default 30
+          ttr: 30 }                     // job time-to-run limit, re-run if exceeded, default 30 sec
 
 ### quit
 
